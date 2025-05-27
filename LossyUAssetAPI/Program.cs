@@ -23,26 +23,26 @@ var serializer = JsonSerializer.Create(new JsonSerializerSettings
     MetadataPropertyHandling = MetadataPropertyHandling.ReadAhead,
     Converters = new List<JsonConverter>()
     {
-        new FSignedZeroJsonConverter(),
-        new FNameJsonConverter(null),
-        new FStringTableJsonConverter(),
-        new FStringJsonConverter(),
+        //new FSignedZeroJsonConverter(),
+        //new FNameJsonConverter(null),
+        //new FStringTableJsonConverter(),
+        //new FStringJsonConverter(),
         new FPackageIndexJsonConverter(),
-        new StringEnumConverter(),
-        new GuidJsonConverter(),
-        new ByteArrayJsonConverter()
+        //new StringEnumConverter(),
+        //new GuidJsonConverter(),
+        //new ByteArrayJsonConverter()
+    },
+    Error = (sender, args) =>
+    {
+        // Skip the problematic member
+        //Console.WriteLine($"Skipping error: {args.ErrorContext.Error.Message}");
+        args.ErrorContext.Handled = true;
     }
-    //Error = (sender, args) =>
-    //{
-    //    // Skip the problematic member
-    //    Console.WriteLine($"Skipping error: {args.ErrorContext.Error.Message}");
-    //    args.ErrorContext.Handled = true;
-    //}
 });
-JToken token = JToken.FromObject(export, serializer);
+JToken token = JToken.FromObject(asset.Exports, serializer);
 //var deserialized = token.ToObject(export.GetType(), serializer);
 stopwatch.Stop();  // Stop timing
-Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms. Exports count: {asset.Exports.Count}");
 Console.WriteLine(export.OuterIndex);
 Console.WriteLine(export.SuperIndex);
 
@@ -62,7 +62,8 @@ public class CustomFPackageIndexJsonConverter : JsonConverter
             pindex.Index = 0;
         }
         //writer.WriteValue((value as FPackageIndex).Index);
-        writer.WriteValue(0);
+        //writer.WriteValue(0);
+        writer.WriteNull();
     }
 
     public override bool CanRead
