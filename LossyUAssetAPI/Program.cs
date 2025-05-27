@@ -40,9 +40,11 @@ var serializer = JsonSerializer.Create(new JsonSerializerSettings
     //}
 });
 JToken token = JToken.FromObject(export, serializer);
-var deserialized = token.ToObject<Export>(serializer);
+//var deserialized = token.ToObject(export.GetType(), serializer);
 stopwatch.Stop();  // Stop timing
 Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
+Console.WriteLine(export.OuterIndex);
+Console.WriteLine(export.SuperIndex);
 
 public class CustomFPackageIndexJsonConverter : JsonConverter
 {
@@ -55,7 +57,12 @@ public class CustomFPackageIndexJsonConverter : JsonConverter
 
     public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
-        writer.WriteValue((value as FPackageIndex).Index);
+        if (value is FPackageIndex pindex)
+        {
+            pindex.Index = 0;
+        }
+        //writer.WriteValue((value as FPackageIndex).Index);
+        writer.WriteValue(0);
     }
 
     public override bool CanRead
@@ -65,7 +72,7 @@ public class CustomFPackageIndexJsonConverter : JsonConverter
 
     public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
-        Console.WriteLine($"hacking fucking FPackageIndex :D {CurrentAsset.FilePath}");
+        //Console.WriteLine($"hacking fucking FPackageIndex :D {CurrentAsset.FilePath} {Convert.ToInt32(reader.Value)}");
         return new FPackageIndex(Convert.ToInt32(reader.Value));
     }
 
