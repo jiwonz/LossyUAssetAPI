@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36121.58 d17.14
+VisualStudioVersion = 17.14.36121.58
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LossyUAssetAPI", "LossyUAssetAPI\LossyUAssetAPI.csproj", "{10A118CD-5458-4BB7-A92D-39EA6E4F94E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "LossyUAssetAPI\Example.csproj", "{10A118CD-5458-4BB7-A92D-39EA6E4F94E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
