@@ -1,26 +1,23 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System.Diagnostics;
 using UAssetAPI;
-using UAssetAPI.ExportTypes;
 using UAssetAPI.JSON;
 using UAssetAPI.UnrealTypes;
 
-UAsset asset = new("input.umap", UAssetAPI.UnrealTypes.EngineVersion.VER_UE5_3);
+UAsset asset = new("input.umap", EngineVersion.VER_UE5_3);
 
-var stopwatch = Stopwatch.StartNew();  // Start timing
-var export = asset.Exports[0];
 Dictionary<FName, string> toBeFilled = new Dictionary<FName, string>();
 var serializer = JsonSerializer.Create(new JsonSerializerSettings
 {
     ContractResolver = new OverrideFPackageIndexResolver(toBeFilled, asset),
-    TypeNameHandling = TypeNameHandling.Objects,
-    NullValueHandling = NullValueHandling.Include,
+    TypeNameHandling = TypeNameHandling.None,
+    NullValueHandling = NullValueHandling.Ignore,
+    Formatting = Formatting.None,
     FloatParseHandling = FloatParseHandling.Double,
     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-    MetadataPropertyHandling = MetadataPropertyHandling.ReadAhead,
+    MetadataPropertyHandling = MetadataPropertyHandling.Ignore,
     Converters = new List<JsonConverter>()
     {
         //new FSignedZeroJsonConverter(),
@@ -39,9 +36,11 @@ var serializer = JsonSerializer.Create(new JsonSerializerSettings
         args.ErrorContext.Handled = true;
     }
 });
-JToken token = JToken.FromObject(asset.Exports, serializer);
+var stopwatch = Stopwatch.StartNew();  // Start timing
+JToken token = JToken.FromObject(asset, serializer);
 //var deserialized = token.ToObject(export.GetType(), serializer);
 stopwatch.Stop();  // Stop timing
+var export = asset.Exports[0];
 Console.WriteLine($"Elapsed time: {stopwatch.ElapsedMilliseconds} ms. Exports count: {asset.Exports.Count}");
 Console.WriteLine(export.OuterIndex);
 Console.WriteLine(export.SuperIndex);
